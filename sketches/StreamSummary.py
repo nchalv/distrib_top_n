@@ -1,5 +1,5 @@
 from typing import Optional, Dict, Set, List, Tuple, Any, TypeVar, Generic
-from sketches.sketch_base import SketchBase
+from sketch_base import SketchBase
 
 T = TypeVar('T')
 
@@ -111,14 +111,8 @@ class StreamSummary(SketchBase[T], Generic[T]):
         if new_count not in self.buckets:
             new_bucket = self.Bucket(new_count)
             self.buckets[new_count] = new_bucket
-            prev = None
-            curr = self.min_bucket
-            while curr and curr.count < new_count:
-                prev = curr
-                curr = curr.next
-            self._insert_bucket_after(new_bucket, prev)
-        else:
-            new_bucket = self.buckets[new_count]
+            self._insert_bucket_after(new_bucket, old_bucket)
+        new_bucket = self.buckets[new_count]
         new_bucket.elements.add(element.item)
         element.parent_bucket = new_bucket
         if len(old_bucket.elements) == 0:
@@ -145,8 +139,7 @@ class StreamSummary(SketchBase[T], Generic[T]):
                     bucket = self.Bucket(1)
                     self.buckets[1] = bucket
                     self._insert_bucket_after(bucket, None)
-                else:
-                    bucket = self.buckets[1]
+                bucket = self.buckets[1]
                 bucket.elements.add(item)
                 element.parent_bucket = bucket
                 self.total_distinct_elements += 1
@@ -330,7 +323,7 @@ def aggregate_summaries(summaries: List[StreamSummary], capacity: int, n: Option
     omega_10p: float = 0
     if omega_values:
         sorted_omega: List[float] = sorted(omega_values)
-        index_10p: int = max(0, min(len(sorted_omega) - 1, int(0.15 * len(sorted_omega))))
+        index_10p: int = max(0, min(len(sorted_omega) - 1, int(0.1 * len(sorted_omega))))
         omega_10p = sorted_omega[index_10p]
 
     merged: StreamSummary = StreamSummary(capacity)

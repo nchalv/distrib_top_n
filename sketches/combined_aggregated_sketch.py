@@ -1,7 +1,7 @@
 from typing import TypeVar, Generic, Optional, Dict, Set, List, Tuple, Any
-from sketches.sketch_base import SketchBase
-from sketches.ExactCounter import ExactCounter
-from sketches.StreamSummary import StreamSummary
+from sketch_base import SketchBase
+from ExactCounter import ExactCounter
+from StreamSummary import StreamSummary
 
 T = TypeVar("T")
 

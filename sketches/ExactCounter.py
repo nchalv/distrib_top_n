@@ -1,5 +1,5 @@
 from typing import TypeVar, List, Dict, Set, Optional, Tuple, Generic
-from sketches.sketch_base import SketchBase
+from sketch_base import SketchBase
 # ExactCounter provides exact frequency counting for a predefined set of keys.
 # It is intended for use-cases where the domain (keys) is known and bounded,
 # enabling O(1) inserts and O(1) queries by key, and O(n log n) top-k retrieval.
