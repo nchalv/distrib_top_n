@@ -5,6 +5,7 @@ from metrics.entropy import compute_entropy, normalize_entropy
 from metrics.metric_utils import compute_topn_metrics
 from runners.method_runner_base import MethodRunnerBase
 from runners.adaptive_ss_runner import AdaptiveSSRunner
+from runners.adaptive_ss_runner_new import AdaptiveSSRunnerNew
 from runners.static_ss_runner import StaticSSRunner
 from typing import Dict, List, Tuple
 from pathlib import Path
@@ -128,7 +129,8 @@ def evaluate_method(
             desc = "AdaptiveSS"
         elif isinstance(runner, StaticSSRunner):
             desc = "StaticSS"
-
+        elif isinstance(runner, AdaptiveSSRunnerNew):
+            desc = "AdaptiveSSNew"
 
         if (actual_top_n or estimated_top_n) and plot_est:
             plot_actual_vs_estimated(actual_top_n, actual_freqs, estimated_top_n, window, int((1/n)*window_size), n, desc)

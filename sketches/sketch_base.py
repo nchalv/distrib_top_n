@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, TypeVar, Generic
+
+T = TypeVar('T')
 
 
-class SketchBase(ABC):
+class SketchBase(ABC, Generic[T]):
     """
     Abstract base class for streaming frequency sketches.
     """
@@ -11,14 +13,14 @@ class SketchBase(ABC):
         self.capacity = capacity
 
     @abstractmethod
-    def insert(self, item: str) -> None:
+    def insert(self, item: T) -> None:
         """
         Insert an item into the sketch.
         """
         pass
 
     @abstractmethod
-    def topk(self, k: Optional[int] = None) -> List[Tuple[str, int]]:
+    def topk(self, k: Optional[int] = None) -> List[Tuple[T, int]]:
         """
         Return the top-k elements (item, count). If k is None, return all.
         """

@@ -2,8 +2,8 @@ import os
 from data.generate_data import prepare_and_store_data
 from evaluation import evaluate_method
 from runners.adaptive_ss_runner import AdaptiveSSRunner
+from runners.adaptive_ss_runner_new import AdaptiveSSRunnerNew
 from runners.static_ss_runner import StaticSSRunner
-from policies.adaptive_policy import AdaptivePolicy
 from sketches.StreamSummary import StreamSummary
 from utils.io import save_jsonl_gz
 
@@ -59,14 +59,18 @@ scenario = [
 
 
 
-# # === Step 2: Instantiate Runner for Adaptive SpaceSaving ===
+# === Step 2: Instantiate Runner for Adaptive SpaceSaving ===
 runner = AdaptiveSSRunner(
-    n=n,
-    m=m,
-    policy=AdaptivePolicy(n=n),
-    alpha=0.5
+   n=n,
+   m=m,
+   alpha=0.5
 )
-#
+
+# runner = AdaptiveSSRunnerNew(
+#    n=n,
+#    m=m,
+#    alpha=0.5
+# )
 # runner = StaticSSRunner(
 #     n=n,
 #     m=m,
@@ -77,6 +81,8 @@ if isinstance(runner, AdaptiveSSRunner):
     method_name = "adaptive_ss"
 elif isinstance(runner, StaticSSRunner):
     method_name = "static_ss"
+elif isinstance(runner, AdaptiveSSRunnerNew):
+    method_name = "static_ss_new"
 
 # === Step 3: Evaluate Method ===
 results = evaluate_method(

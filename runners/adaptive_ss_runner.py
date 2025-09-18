@@ -1,7 +1,7 @@
 from sketches.StreamSummary import StreamSummary, aggregate_summaries
 from runners.method_runner_base import MethodRunnerBase
 from metrics.divergence import compute_jsd
-from policies.adaptive_policy import AdaptivePolicy
+#from policies.adaptive_policy import AdaptivePolicy
 from pprint import pformat
 
 class AdaptiveSSRunner(MethodRunnerBase):
@@ -12,7 +12,6 @@ class AdaptiveSSRunner(MethodRunnerBase):
         self.alpha = alpha
         self.verbose = verbose
         self.sketch_class = StreamSummary
-        self.policy = policy or AdaptivePolicy(n)
         self.stream_summaries = []
         self.estimated_counts_and_freqs = {}
         self.prev_freqs = {}
@@ -31,16 +30,21 @@ class AdaptiveSSRunner(MethodRunnerBase):
     def finalize_window(self, window_id: int) -> dict:
         self.L_prev = self.L_t
         self.prev_freqs = self.freqs
-        agg = aggregate_summaries(self.stream_summaries, self.n)
+        agg, stats = aggregate_summaries(self.stream_summaries, self.n)
         total = agg.total_count()
         sorted_items = sorted(agg.topk(), key=lambda x: -x[1])
         self.estimated_counts_and_freqs = {
             key: (count, count / total)
             for key, count in sorted_items
         }
+        omega_10p = stats["omega_10p"]
+        print("omega_10p = "+str(omega_10p))
+        r=0.15
+        print("q_new = "+str((self.n/r)*(2-omega_10p)))
         self._update_L()
         self._update_L_t()
         self._update_q()
+        print("q = "+str(self.q))
 
 
 
@@ -70,7 +74,7 @@ class AdaptiveSSRunner(MethodRunnerBase):
 
     def __str__(self) -> str:
         """Pretty-prints all attributes, excluding specified ones."""
-        excluded_attrs = {'L_prev', 'stream_summaries', 'policy', 'prev_freqs', 'freqs'}  # Customize this set
+        excluded_attrs = {'L_prev', 'stream_summaries', 'prev_freqs', 'freqs'}  # Customize this set
         attributes = {
             key: value
             for key, value in vars(self).items()
