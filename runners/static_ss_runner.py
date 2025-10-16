@@ -1,4 +1,4 @@
-from sketches.StreamSummary import StreamSummary, aggregate_summaries
+from sketches.stream_summary import StreamSummary, aggregate_summaries
 from runners.method_runner_base import MethodRunnerBase
 
 class StaticSSRunner(MethodRunnerBase):

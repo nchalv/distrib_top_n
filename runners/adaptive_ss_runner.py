@@ -1,4 +1,4 @@
-from sketches.StreamSummary import StreamSummary, aggregate_summaries
+from sketches.stream_summary import StreamSummary, aggregate_summaries
 from runners.method_runner_base import MethodRunnerBase
 from metrics.divergence import compute_jsd
 #from policies.adaptive_policy import AdaptivePolicy
@@ -30,17 +30,21 @@ class AdaptiveSSRunner(MethodRunnerBase):
     def finalize_window(self, window_id: int) -> dict:
         self.L_prev = self.L_t
         self.prev_freqs = self.freqs
-        agg, stats = aggregate_summaries(self.stream_summaries, self.n)
+        agg, stats = aggregate_summaries(self.stream_summaries, self.n*self.m, self.n)
         total = agg.total_count()
         sorted_items = sorted(agg.topk(), key=lambda x: -x[1])
         self.estimated_counts_and_freqs = {
             key: (count, count / total)
             for key, count in sorted_items
         }
-        omega_10p = stats["omega_10p"]
-        print("omega_10p = "+str(omega_10p))
+        top_g = stats["top_g"]
+        #print(stats['item_stats'])
+        omega_min = min(stats['item_stats'], key=lambda x: x[5])[5]
+        print(omega_min)
+        # print("top_g = "+str(top_g))
+        # print("top_n = "+str(stats["top_n"]))
         r=0.15
-        print("q_new = "+str((self.n/r)*(2-omega_10p)))
+        print("q_new = "+str((self.n/r)*(2-omega_min)))
         self._update_L()
         self._update_L_t()
         self._update_q()
