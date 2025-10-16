@@ -11,7 +11,7 @@ from typing import Dict, List, Tuple
 from pathlib import Path
 import gzip
 import pickle
-from sketches.StreamSummary import StreamSummary, aggregate_summaries
+from sketches.stream_summary import StreamSummary, aggregate_summaries
 from visualisation.result_visualiser import plot_actual_vs_estimated
 
 

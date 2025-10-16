@@ -4,7 +4,7 @@ from evaluation import evaluate_method
 from runners.adaptive_ss_runner import AdaptiveSSRunner
 from runners.adaptive_ss_runner_new import AdaptiveSSRunnerNew
 from runners.static_ss_runner import StaticSSRunner
-from sketches.StreamSummary import StreamSummary
+from sketches.stream_summary import StreamSummary
 from utils.io import save_jsonl_gz
 
 # === Experiment Parameters ===
